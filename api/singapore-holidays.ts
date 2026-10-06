@@ -5,15 +5,13 @@ const DATA_GOV_SG_ENDPOINT =
 
 export async function fetchSingaporeHolidays(limit: number = 100, apiKey?: string) {
   const url = `${DATA_GOV_SG_ENDPOINT}&limit=${limit}`;
-  const key = apiKey || process.env.DATA_GOV_API_KEY;
 
   const headers: Record<string, string> = {
     Accept: 'application/json'
   };
 
-  // All data.gov.sg related requests need the header: x-api-key: <DATA_GOV_API_KEY>
-  if (key) {
-    headers['x-api-key'] = key;
+  if (apiKey) {
+    headers['x-api-key'] = apiKey;
   }
 
   const response = await fetch(url, {
@@ -33,10 +31,7 @@ export async function fetchSingaporeHolidays(limit: number = 100, apiKey?: strin
 export default async function handler(req: Request, res: Response) {
   try {
     const limit = req.query.limit ? parseInt(req.query.limit as string, 10) : 100;
-    const apiKey =
-      (req.headers['x-api-key'] as string) ||
-      (req.query.api_key as string) ||
-      process.env.DATA_GOV_API_KEY;
+    const apiKey = (req.headers['x-api-key'] as string) || (req.query.api_key as string);
 
     const data = await fetchSingaporeHolidays(limit, apiKey);
 
@@ -45,7 +40,6 @@ export default async function handler(req: Request, res: Response) {
       success: true,
       source: 'data.gov.sg',
       resource_id: 'd_8ef23381f9417e4d4254ee8b4dcdb176',
-      hasApiKey: Boolean(apiKey),
       data
     });
   } catch (error: any) {

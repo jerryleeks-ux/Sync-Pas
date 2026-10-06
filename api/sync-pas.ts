@@ -40,7 +40,6 @@ export default async function handler(req: Request, res: Response) {
     (req.query.apikey as string);
 
   const dataGovApiKey =
-    process.env.DATA_GOV_API_KEY ||
     (req.headers['x-api-key'] as string) ||
     (req.query.data_gov_api_key as string);
 

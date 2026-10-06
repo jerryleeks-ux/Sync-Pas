@@ -160,7 +160,7 @@ export const SyncIntegrationsModal: React.FC<SyncIntegrationsModalProps> = ({
                   try {
                     const res = await fetch('/api/singapore-holidays?limit=5');
                     const json = await res.json();
-                    alert(`data.gov.sg Holidays (/api/singapore-holidays):\n- Status: ${json.success ? 'Success' : 'Failed'}\n- x-api-key active: ${json.hasApiKey}\n- Sample: ${JSON.stringify(json.data?.result?.records?.slice(0, 2), null, 2)}`);
+                    alert(`data.gov.sg Holidays (/api/singapore-holidays):\n- Status: ${json.success ? 'Success' : 'Failed'}\n- Sample: ${JSON.stringify(json.data?.result?.records?.slice(0, 2), null, 2)}`);
                   } catch (e: any) {
                     alert(`Error calling /api/singapore-holidays: ${e.message}`);
                   }
@@ -179,7 +179,7 @@ export const SyncIntegrationsModal: React.FC<SyncIntegrationsModalProps> = ({
                     const sgCount = json.sources?.singaporeHolidays?.recordCount ?? json.sources?.singaporeHolidays?.status;
                     const devCount = json.sources?.developerEvents?.eventCount ?? json.sources?.developerEvents?.status;
                     const tmStatus = json.sources?.ticketmaster?.status;
-                    alert(`Sync-Pas (/api/sync-pas):\n- data.gov.sg (x-api-key): ${sgCount} records\n- developers.events: ${devCount} events\n- Ticketmaster: ${tmStatus} (${json.sources?.ticketmaster?.configured ? 'Key configured' : 'API Key required'})\n\nFull timestamp: ${json.timestamp}`);
+                    alert(`Sync-Pas (/api/sync-pas):\n- data.gov.sg: ${sgCount} records\n- developers.events: ${devCount} events\n- Ticketmaster: ${tmStatus} (${json.sources?.ticketmaster?.configured ? 'Key configured' : 'API Key required'})\n\nFull timestamp: ${json.timestamp}`);
                   } catch (e: any) {
                     alert(`Error calling /api/sync-pas: ${e.message}`);
                   }
