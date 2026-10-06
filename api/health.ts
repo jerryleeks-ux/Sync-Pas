@@ -14,6 +14,7 @@ export interface HealthResponse {
 
 export default async function handler(req: Request, res: Response) {
   const hasTicketmasterKey = Boolean(process.env.TICKETMASTER_API_KEY);
+  const hasDataGovKey = Boolean(process.env.DATA_GOV_API_KEY);
 
   const payload: HealthResponse = {
     status: 'ok',
@@ -21,7 +22,7 @@ export default async function handler(req: Request, res: Response) {
     uptime: process.uptime(),
     environment: process.env.NODE_ENV || 'development',
     services: {
-      dataGovSg: 'reachable',
+      dataGovSg: hasDataGovKey ? 'connected' : 'reachable',
       developersEvents: 'reachable',
       ticketmaster: hasTicketmasterKey ? 'configured' : 'missing_api_key'
     }

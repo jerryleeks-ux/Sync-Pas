@@ -137,7 +137,7 @@ export const SyncIntegrationsModal: React.FC<SyncIntegrationsModalProps> = ({
               <span className="text-[10px] font-mono text-[#908fa0]">/api/* endpoints</span>
             </div>
 
-            <div className="grid grid-cols-2 gap-2">
+            <div className="grid grid-cols-3 gap-2">
               <button
                 type="button"
                 onClick={async () => {
@@ -151,7 +151,23 @@ export const SyncIntegrationsModal: React.FC<SyncIntegrationsModalProps> = ({
                 }}
                 className="py-1.5 px-2 bg-[#222a3d] hover:bg-[#2d3449] text-[#dae2fd] text-[11px] font-mono rounded border border-white/[0.04] transition-colors cursor-pointer text-center"
               >
-                Test /api/health
+                /api/health
+              </button>
+
+              <button
+                type="button"
+                onClick={async () => {
+                  try {
+                    const res = await fetch('/api/singapore-holidays?limit=5');
+                    const json = await res.json();
+                    alert(`data.gov.sg Holidays (/api/singapore-holidays):\n- Status: ${json.success ? 'Success' : 'Failed'}\n- x-api-key active: ${json.hasApiKey}\n- Sample: ${JSON.stringify(json.data?.result?.records?.slice(0, 2), null, 2)}`);
+                  } catch (e: any) {
+                    alert(`Error calling /api/singapore-holidays: ${e.message}`);
+                  }
+                }}
+                className="py-1.5 px-2 bg-[#222a3d] hover:bg-[#2d3449] text-[#dae2fd] text-[11px] font-mono rounded border border-white/[0.04] transition-colors cursor-pointer text-center"
+              >
+                /api/data-gov
               </button>
 
               <button
@@ -163,14 +179,14 @@ export const SyncIntegrationsModal: React.FC<SyncIntegrationsModalProps> = ({
                     const sgCount = json.sources?.singaporeHolidays?.recordCount ?? json.sources?.singaporeHolidays?.status;
                     const devCount = json.sources?.developerEvents?.eventCount ?? json.sources?.developerEvents?.status;
                     const tmStatus = json.sources?.ticketmaster?.status;
-                    alert(`Sync-Pas (/api/sync-pas):\n- data.gov.sg Holidays: ${sgCount} records\n- developers.events: ${devCount} events\n- Ticketmaster: ${tmStatus} (${json.sources?.ticketmaster?.configured ? 'Key configured' : 'API Key required'})\n\nFull timestamp: ${json.timestamp}`);
+                    alert(`Sync-Pas (/api/sync-pas):\n- data.gov.sg (x-api-key): ${sgCount} records\n- developers.events: ${devCount} events\n- Ticketmaster: ${tmStatus} (${json.sources?.ticketmaster?.configured ? 'Key configured' : 'API Key required'})\n\nFull timestamp: ${json.timestamp}`);
                   } catch (e: any) {
                     alert(`Error calling /api/sync-pas: ${e.message}`);
                   }
                 }}
                 className="py-1.5 px-2 bg-[#8083ff]/20 hover:bg-[#8083ff]/30 text-[#c0c1ff] text-[11px] font-mono rounded border border-[#8083ff]/30 transition-colors cursor-pointer text-center font-bold"
               >
-                Test /api/sync-pas
+                /api/sync-pas
               </button>
             </div>
           </div>

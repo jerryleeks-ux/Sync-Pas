@@ -3,17 +3,27 @@ import type { Request, Response } from 'express';
 const DATA_GOV_SG_ENDPOINT =
   'https://data.gov.sg/api/action/datastore_search?resource_id=d_8ef23381f9417e4d4254ee8b4dcdb176';
 
-export async function fetchSingaporeHolidays(limit: number = 100) {
+export async function fetchSingaporeHolidays(limit: number = 100, apiKey?: string) {
   const url = `${DATA_GOV_SG_ENDPOINT}&limit=${limit}`;
+  const key = apiKey || process.env.DATA_GOV_API_KEY;
+
+  const headers: Record<string, string> = {
+    Accept: 'application/json'
+  };
+
+  // All data.gov.sg related requests need the header: x-api-key: <DATA_GOV_API_KEY>
+  if (key) {
+    headers['x-api-key'] = key;
+  }
+
   const response = await fetch(url, {
     method: 'GET',
-    headers: {
-      Accept: 'application/json'
-    }
+    headers
   });
 
   if (!response.ok) {
-    throw new Error(`Data.gov.sg API responded with status ${response.status}: ${response.statusText}`);
+    const errorText = await response.text();
+    throw new Error(`Data.gov.sg API responded with status ${response.status}: ${errorText || response.statusText}`);
   }
 
   const data = await response.json();
@@ -23,13 +33,19 @@ export async function fetchSingaporeHolidays(limit: number = 100) {
 export default async function handler(req: Request, res: Response) {
   try {
     const limit = req.query.limit ? parseInt(req.query.limit as string, 10) : 100;
-    const data = await fetchSingaporeHolidays(limit);
+    const apiKey =
+      (req.headers['x-api-key'] as string) ||
+      (req.query.api_key as string) ||
+      process.env.DATA_GOV_API_KEY;
+
+    const data = await fetchSingaporeHolidays(limit, apiKey);
 
     res.setHeader('Content-Type', 'application/json');
     return res.status(200).json({
       success: true,
       source: 'data.gov.sg',
       resource_id: 'd_8ef23381f9417e4d4254ee8b4dcdb176',
+      hasApiKey: Boolean(apiKey),
       data
     });
   } catch (error: any) {

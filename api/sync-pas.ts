@@ -39,6 +39,11 @@ export default async function handler(req: Request, res: Response) {
     (req.headers['x-ticketmaster-key'] as string) ||
     (req.query.apikey as string);
 
+  const dataGovApiKey =
+    process.env.DATA_GOV_API_KEY ||
+    (req.headers['x-api-key'] as string) ||
+    (req.query.data_gov_api_key as string);
+
   const countryCode = (req.query.countryCode as string) || 'AU';
   const city = (req.query.city as string) || 'Melbourne';
   const holidaysLimit = req.query.limit ? parseInt(req.query.limit as string, 10) : 50;
@@ -66,11 +71,11 @@ export default async function handler(req: Request, res: Response) {
   // Run all 3 fetches concurrently with isolated fault tolerance
   const tasks: Promise<void>[] = [];
 
-  // Task 1: Singapore Public Holidays
+  // Task 1: Singapore Public Holidays (header: x-api-key: <DATA_GOV_API_KEY>)
   tasks.push(
     (async () => {
       try {
-        const holidaysData = await fetchSingaporeHolidays(holidaysLimit);
+        const holidaysData = await fetchSingaporeHolidays(holidaysLimit, dataGovApiKey);
         const records = holidaysData.result?.records || [];
         result.sources.singaporeHolidays = {
           status: 'success',
