@@ -54,14 +54,6 @@ export const Header: React.FC<HeaderProps> = ({
     }
   ];
 
-  const navItems = [
-    { id: 'smart-schedules', label: 'Smart Schedules' },
-    { id: 'concerts-and-events', label: 'Concerts & Events (Ticketmaster)' },
-    { id: 'business-conferences', label: 'Business Conferences' },
-    { id: 'annual-leave-optimizer', label: 'Annual Leave Optimizer' },
-    { id: 'my-trips', label: 'My Trips' }
-  ];
-
   return (
     <header className="fixed top-0 left-0 right-0 z-50 bg-[#060e20]/85 backdrop-blur-xl border-b border-white/[0.06] shadow-[0_1px_8px_rgba(0,0,0,0.4)]">
       <div className="h-20 w-full px-6 flex items-center justify-between gap-4">
@@ -104,26 +96,6 @@ export const Header: React.FC<HeaderProps> = ({
             </select>
           </div>
         </div>
-
-        {/* Central Nav Links */}
-        <nav className="hidden lg:flex items-center gap-1">
-          {navItems.map((item) => {
-            const isActive = currentTab === item.id;
-            return (
-              <button
-                key={item.id}
-                onClick={() => onTabChange(item.id)}
-                className={`px-3 py-1.5 transition-all text-[14px] cursor-pointer whitespace-nowrap ${
-                  isActive
-                    ? 'bg-[#8083ff] text-[#0d0096] font-semibold rounded-lg shadow-sm'
-                    : 'text-[#c7c4d7] hover:text-[#dae2fd] hover:bg-[#222a3d] font-medium rounded-lg'
-                }`}
-              >
-                {item.label}
-              </button>
-            );
-          })}
-        </nav>
 
         {/* Right Status & Profile Cluster */}
         <div className="flex items-center gap-3">
