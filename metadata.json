@@ -1,0 +1,6 @@
+{
+  "name": "SyncPass - Dual-Track Bleisure & Leave Optimizer",
+  "description": "Synchronize high-impact business conferences with worldwide live concerts and maximize Singapore annual leave with algorithmic precision.",
+  "requestFramePermissions": [],
+  "majorCapabilities": ["MAJOR_CAPABILITY_SERVER_SIDE_GEMINI_API"]
+}
